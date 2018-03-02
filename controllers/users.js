@@ -1,0 +1,49 @@
+'use strict';
+
+module.exports = function (_, passport) { //, user) {
+
+    return {
+        setRouting: function (router) {
+            router.get('/', this.indexPage);
+            router.get('/signup', this.getSignUp);
+            router.get('/home', this.homePage);
+
+            // router.post('/', user.loginValidation, this.postLogin);
+            // router.post('/signup', user.signUpValidation, this.postSignUp);
+            router.post('/signup', this.postSignUp);
+        },
+
+        indexPage: function (req, res) {
+            // const errors = req.flash('error');
+            return res.render('index');
+            // ,{
+            //     title: 'footballkik | login',
+            //     messages: errors,
+            //     hasErrors: errors.length > 0
+            // })
+        },
+        // postLogin: passport.authenticate('local.login', {
+        //     successRedirect: '/home',
+        //     failureRedirect: '/',
+        //     failureFlash: true
+        // }),
+        getSignUp: function (req, res) {
+            // const errors = req.flash('error');
+            return res.render('signup');
+            // , {
+            //     title: 'footballkik | SignUp',
+            //     messages: errors,
+            //     hasErrors: errors.length > 0
+            // });
+        },
+        postSignUp: passport.authenticate('local.signup', {
+            successRedirect: '/home',
+            failureRedirect: '/signup',
+            failureFlash: true
+        }),
+
+        homePage: function (req, res) {
+            return res.render('home');
+        }
+    }
+};
