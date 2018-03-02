@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function (_, passport) { //, user) {
+module.exports = function (_, passport, User) {
 
     return {
         setRouting: function (router) {
@@ -9,8 +9,7 @@ module.exports = function (_, passport) { //, user) {
             router.get('/home', this.homePage);
 
             // router.post('/', user.loginValidation, this.postLogin);
-            // router.post('/signup', user.signUpValidation, this.postSignUp);
-            router.post('/signup', this.postSignUp);
+            router.post('/signup', User.signUpValidation, this.postSignUp);
         },
 
         indexPage: function (req, res) {
@@ -28,13 +27,12 @@ module.exports = function (_, passport) { //, user) {
         //     failureFlash: true
         // }),
         getSignUp: function (req, res) {
-            // const errors = req.flash('error');
-            return res.render('signup');
-            // , {
-            //     title: 'footballkik | SignUp',
-            //     messages: errors,
-            //     hasErrors: errors.length > 0
-            // });
+            const errors = req.flash('error');
+            return res.render('signup', {
+                title: 'footballkik | SignUp',
+                messages: errors,
+                hasErrors: errors.length > 0
+            });
         },
         postSignUp: passport.authenticate('local.signup', {
             successRedirect: '/home',

@@ -58,7 +58,7 @@ container.resolve(function (users, _) {
         app.use(passport.initialize());
         app.use(passport.session());
 
-        // app.locals._ = _;
+        app.locals._ = _;
     }
 });
 
