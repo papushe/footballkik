@@ -8,24 +8,26 @@ module.exports = function (_, passport, User) {
             router.get('/signup', this.getSignUp);
             router.get('/home', this.homePage);
 
-            // router.post('/', user.loginValidation, this.postLogin);
+            router.get('/auth/facebook', this.getFacebookLogin);
+            router.get('/auth/facebook/callback', this.facebookLogin);
+
+            router.post('/', User.loginValidation, this.postLogin);
             router.post('/signup', User.signUpValidation, this.postSignUp);
         },
 
         indexPage: function (req, res) {
-            // const errors = req.flash('error');
-            return res.render('index');
-            // ,{
-            //     title: 'footballkik | login',
-            //     messages: errors,
-            //     hasErrors: errors.length > 0
-            // })
+            const errors = req.flash('error');
+            return res.render('index', {
+                title: 'footballkik | login',
+                messages: errors,
+                hasErrors: errors.length > 0
+            });
         },
-        // postLogin: passport.authenticate('local.login', {
-        //     successRedirect: '/home',
-        //     failureRedirect: '/',
-        //     failureFlash: true
-        // }),
+        postLogin: passport.authenticate('local.login', {
+            successRedirect: '/home',
+            failureRedirect: '/',
+            failureFlash: true
+        }),
         getSignUp: function (req, res) {
             const errors = req.flash('error');
             return res.render('signup', {
@@ -39,7 +41,14 @@ module.exports = function (_, passport, User) {
             failureRedirect: '/signup',
             failureFlash: true
         }),
-
+        getFacebookLogin: passport.authenticate('facebook', {
+            scope:'email'
+        }),
+        facebookLogin: passport.authenticate('facebook', {
+            successRedirect: '/home',
+            failureRedirect: '/signup',
+            failureFlash: true
+        }),
         homePage: function (req, res) {
             return res.render('home');
         }
